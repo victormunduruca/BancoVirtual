@@ -34,11 +34,11 @@ public class TrataClientes implements Runnable{
 			switch (acao) {
 			case 1:
 				Pessoa novaPessoa = decodificaPessoa(pacote);
-				System.out.println(novaPessoa.getNome());
+				//manda o controller cadastrar a conta
+				System.out.println(novaPessoa.getNome()+novaPessoa.getNumeroRegistro()+novaPessoa.getEndereco().getCep()+novaPessoa.getEndereco().getNumero()+novaPessoa.getEndereco().getRua()+novaPessoa.getUsuario()+novaPessoa.getSenha());
 				outputDados.writeInt(2);
 				outputDados.close();
 				break;
-
 			default:
 				break;
 			}
@@ -60,7 +60,7 @@ public class TrataClientes implements Runnable{
 		String[] acaoDados = pacote.split("-");
 		String[] partes = acaoDados[1].split(";");
 		
-		Pessoa novaPessoa = new Pessoa(partes[0], Boolean.parseBoolean(partes[1]), partes[2]);
+		Pessoa novaPessoa = new Pessoa(partes[0], Boolean.parseBoolean(partes[1]), partes[2], partes[3], partes[4], partes[5], partes[6], partes[7]);
 		return novaPessoa;
 	}
 	

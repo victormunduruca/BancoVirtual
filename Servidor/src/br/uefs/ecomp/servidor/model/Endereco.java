@@ -6,6 +6,11 @@ public class Endereco {
 	private String numero;
 	private String rua;
 	
+	public Endereco(String cep, String rua, String numero) {
+		this.cep = cep;
+		this.rua = rua;
+		this.numero = numero;
+	}
 	
 	public String getCep() {
 		return cep;
