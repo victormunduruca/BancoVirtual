@@ -9,7 +9,7 @@ import br.uefs.ecomp.servidor.model.Pessoa;
 public class Servidor {
 	public static void main(String[] args) throws IOException {
 		
-		ServerSocket servidor = new ServerSocket(12349);
+		ServerSocket servidor = new ServerSocket(12345);
 		System.out.println("Porta aberta");
 		
 		

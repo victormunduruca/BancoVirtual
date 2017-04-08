@@ -26,21 +26,17 @@ public class TrataClientes implements Runnable{
 			DataInputStream inputDados = new DataInputStream(cliente.getInputStream());
 			DataOutputStream outputDados = new DataOutputStream(cliente.getOutputStream());
 			
-			String pacote = inputDados.readUTF();
+			String pacote = (String) inputDados.readUTF();
+			System.out.println("pacote: " +pacote);
 			int acao =  retornaAcao(pacote);
 			System.out.println("Acao: " +acao);
 			
 			switch (acao) {
 			case 1:
-//				outputDados.writeInt(1);
-//				String nome = (String) inputDados.readUTF();
-//				boolean eJuridica = inputDados.readBoolean();
-//				String numeroRegistro = (String) inputDados.readUTF();
-//				System.out.println(nome+eJuridica+numeroRegistro);
-//				outputDados.writeInt(2);
-//				outputDados.close();
 				Pessoa novaPessoa = decodificaPessoa(pacote);
 				System.out.println(novaPessoa.getNome());
+				outputDados.writeInt(2);
+				outputDados.close();
 				break;
 
 			default:
