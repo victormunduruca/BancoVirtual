@@ -12,8 +12,10 @@ import br.uefs.ecomp.servidor.model.Pessoa;
 public class TrataClientes implements Runnable{
 
 	private Socket cliente; 
-
+	private Controller controller;
+	
 	public TrataClientes(Socket s) {
+		controller = Controller.getInstance();
 		this.cliente = s;
 	}
 
