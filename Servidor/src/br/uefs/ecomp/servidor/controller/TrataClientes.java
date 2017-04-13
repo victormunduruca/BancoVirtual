@@ -3,8 +3,12 @@ package br.uefs.ecomp.servidor.controller;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 
+import br.uefs.ecomp.servidor.exceptions.PessoaExistenteException;
+import br.uefs.ecomp.servidor.model.Acao;
+import br.uefs.ecomp.servidor.model.ContaCorrente;
 import br.uefs.ecomp.servidor.model.Pessoa;
 
 
@@ -14,9 +18,14 @@ public class TrataClientes implements Runnable{
 	private Socket cliente; 
 	private Controller controller;
 	
-	public TrataClientes(Socket s) {
+	public TrataClientes(ServerSocket servidor) {
 		controller = Controller.getInstance();
-		this.cliente = s;
+		try {
+			this.cliente = servidor.accept();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -36,11 +45,19 @@ public class TrataClientes implements Runnable{
 			switch (acao) {
 			case 1:
 				Pessoa novaPessoa = decodificaPessoa(pacote);
-				//manda o controller cadastrar a conta
+				try {
+					controller.cadastrarNovaContaCorrente(novaPessoa);	
+				} catch (PessoaExistenteException e) {
+					outputDados.writeInt(10);
+					e.printStackTrace();
+				}
+				outputDados.writeInt(Acao.CADASTRO_SUCESSO);
 				System.out.println(novaPessoa.getNome()+novaPessoa.getNumeroRegistro()+novaPessoa.getEndereco().getCep()+novaPessoa.getEndereco().getNumero()+novaPessoa.getEndereco().getRua()+novaPessoa.getUsuario()+novaPessoa.getSenha());
-				outputDados.writeInt(2);
 				outputDados.close();
 				break;
+			case 2: 
+				//Pessoa novaPessoa = decodificaPessoa(pessoa);
+				
 			default:
 				break;
 			}

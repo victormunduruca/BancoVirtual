@@ -14,8 +14,8 @@ public class Servidor {
 		
 		
 		while(true) {
-			Socket cliente = servidor.accept();
-			TrataClientes trata = new TrataClientes(cliente);
+			
+			TrataClientes trata = new TrataClientes(servidor);
 			new Thread(trata).start();
 		}
 	}
