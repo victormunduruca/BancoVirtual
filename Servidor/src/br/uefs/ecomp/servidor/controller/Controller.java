@@ -23,22 +23,24 @@ public class Controller {
 			ContaCorrente novaConta = new ContaCorrente(pessoa);
 			listaPessoas.add(pessoa);
 			listaContas.add(novaConta);
+		} else {
+			throw new PessoaExistenteException();
 		}
-		throw new PessoaExistenteException();
+		
 	}
-	public static boolean cadastrarNovaContaPoupanca(Pessoa pessoa) {
+	public static void cadastrarNovaContaPoupanca(Pessoa pessoa) throws PessoaExistenteException{
 		if(!existePessoa(pessoa)) { // se só usar essa vez tirar método
 			ContaPoupanca novaConta = new ContaPoupanca(pessoa);
 			listaPessoas.add(pessoa);
 			listaContas.add(novaConta);
-			return true;
-		}
-		return false;
+		} else {
+			throw new PessoaExistenteException();
+		}	
 	}
+	//autentica (login)
 	//cadastrar titular
-	//deposito
-	//saque
-	
+	//deposito deposita(numero conta, 
+	//transferencias 	
 	
 	public static Controller getInstance() {
 

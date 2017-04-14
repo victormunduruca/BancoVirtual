@@ -56,8 +56,17 @@ public class TrataClientes implements Runnable{
 				outputDados.close();
 				break;
 			case 2: 
-				//Pessoa novaPessoa = decodificaPessoa(pessoa);
-				
+				Pessoa novaPessoaPoupanca = decodificaPessoa(pacote);
+				try {
+					controller.cadastrarNovaContaPoupanca(novaPessoaPoupanca);	
+				} catch (PessoaExistenteException e) {
+					outputDados.writeInt(20);
+					e.printStackTrace();
+				}
+				outputDados.writeInt(Acao.CADASTRO_SUCESSO);
+				System.out.println(novaPessoaPoupanca.getNome()+novaPessoaPoupanca.getNumeroRegistro()+novaPessoaPoupanca.getEndereco().getCep()+novaPessoaPoupanca.getEndereco().getNumero()+novaPessoaPoupanca.getEndereco().getRua()+novaPessoaPoupanca.getUsuario()+novaPessoaPoupanca.getSenha());
+				outputDados.close();
+				break;
 			default:
 				break;
 			}
