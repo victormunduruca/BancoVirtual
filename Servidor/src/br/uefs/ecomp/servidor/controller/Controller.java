@@ -1,14 +1,17 @@
 package br.uefs.ecomp.servidor.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import br.uefs.ecomp.servidor.exceptions.PessoaExistenteException;
+import br.uefs.ecomp.servidor.exceptions.UsuarioInexistenteException;
 import br.uefs.ecomp.servidor.model.Conta;
-import br.uefs.ecomp.servidor.model.ContaPoupanca;
 import br.uefs.ecomp.servidor.model.Pessoa;
 
 public class Controller {
@@ -25,7 +28,7 @@ public class Controller {
 	public static void cadastrarNovaConta(Pessoa pessoa, String tipo) throws PessoaExistenteException, IOException{
 		if(!existePessoa(pessoa)) { // se só usar essa vez tirar método
 			Conta novaConta = new Conta(pessoa);
-			File escritaArquivo = new File("dados\\contas\\corrente"+"\\"+novaConta.getNumeroConta()+".txt");
+			File escritaArquivo = new File("dados\\contas"+"\\"+novaConta.getNumeroConta()+".txt");
 			FileOutputStream fos = new FileOutputStream(escritaArquivo);
 			ObjectOutputStream escrever = new ObjectOutputStream(fos);
 			escrever.writeObject(novaConta);
@@ -33,10 +36,8 @@ public class Controller {
 			fos.close();
 			
 			File escritaPessoa;
-			if(pessoa.eJuridica())
-				escritaPessoa = new File("dados\\titulares\\juridica"+"\\"+pessoa.getNumeroRegistro()+".txt");
-			else 
-				escritaPessoa = new File("dados\\titulares\\fisica"+"\\"+pessoa.getNumeroRegistro()+".txt");
+	
+			escritaPessoa = new File("dados\\titulares"+"\\"+pessoa.getUsuario()+".txt");
 			FileOutputStream fosPessoa = new FileOutputStream(escritaPessoa);
 			ObjectOutputStream escreverPessoa = new ObjectOutputStream(fosPessoa);
 			escreverPessoa.writeObject(pessoa);
@@ -49,6 +50,8 @@ public class Controller {
 		
 	}
 	// Implementar diferentes contas
+	
+	
 //	public static void cadastrarNovaContaPoupanca(Pessoa pessoa) throws PessoaExistenteException{
 //		if(!existePessoa(pessoa)) { // se só usar essa vez tirar método
 //			ContaPoupanca novaConta = new ContaPoupanca(pessoa);
@@ -72,12 +75,12 @@ public class Controller {
 	}
 	
 	public static boolean existePessoa(Pessoa pessoa) {
-		String caminho = "dados\\titulares\\";
-		if(pessoa.eJuridica())
-			caminho = caminho + "juridica";
-		else 
-			caminho = caminho + "fisica";
-		ArrayList<String> listaNomes = getListaArquivos(caminho);
+//		String caminho = "dados\\titulares\\";
+//		if(pessoa.eJuridica())
+//			caminho = caminho + "juridica";
+//		else 
+//			caminho = caminho + "fisica";
+		ArrayList<String> listaNomes = getListaArquivos("dados\\titulares");
 		if(listaNomes.contains(pessoa.getNumeroRegistro()))
 			return true;
 		else 
@@ -98,7 +101,28 @@ public class Controller {
 		return listaNomes;
 	}
 	
-	public static Pessoa getPessoa(String caminho) {
-		
+	public static Pessoa getPessoa(String usuario) throws UsuarioInexistenteException, IOException{
+		try {
+			File arquivo = new File("dados\\titulares\\"+usuario+".txt");
+			FileInputStream fis;
+			fis = new FileInputStream(arquivo);
+			ObjectInputStream entrada = new ObjectInputStream(fis);
+			Pessoa pessoa = (Pessoa) entrada.readObject();
+			entrada.close();
+			return pessoa;
+		} catch (FileNotFoundException e) {
+			throw new UsuarioInexistenteException();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return null; //mudar
+		}
+	}
+	
+	public static boolean autenticarPessoa(String usuario, String senha) throws UsuarioInexistenteException, IOException {
+		Pessoa titular = getPessoa(usuario);
+		if(titular.getSenha().equals(senha))
+			return true;
+		else 
+			return false;
 	}
 }

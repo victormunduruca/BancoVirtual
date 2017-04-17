@@ -32,6 +32,7 @@ public class TrataClientes implements Runnable{
 	public void run() {
 		System.out.println("Nova conexão com o cliente " +cliente.getInetAddress().getHostAddress());
 		
+		
 		try {
 			
 			DataInputStream inputDados = new DataInputStream(cliente.getInputStream());
