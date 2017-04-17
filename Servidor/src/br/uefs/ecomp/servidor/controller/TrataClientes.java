@@ -44,21 +44,24 @@ public class TrataClientes implements Runnable{
 			
 			switch (acao) {
 			case 1:
+				int numeroConta = 0;
 				Pessoa novaPessoa = decodificaPessoa(pacote);
 				try {
-					controller.cadastrarNovaContaCorrente(novaPessoa);	
+					controller.cadastrarNovaConta(novaPessoa, "corrente");	
+					outputDados.writeInt(Acao.CADASTRO_SUCESSO);
+					System.out.println(novaPessoa.getNome()+novaPessoa.getNumeroRegistro()+novaPessoa.getEndereco().getCep()+novaPessoa.getEndereco().getNumero()+novaPessoa.getEndereco().getRua()+novaPessoa.getUsuario()+novaPessoa.getSenha());
+					outputDados.close();
 				} catch (PessoaExistenteException e) {
 					outputDados.writeInt(10);
-					e.printStackTrace();
+					System.out.println("Cliente n cadastrado");
 				}
-				outputDados.writeInt(Acao.CADASTRO_SUCESSO);
-				System.out.println(novaPessoa.getNome()+novaPessoa.getNumeroRegistro()+novaPessoa.getEndereco().getCep()+novaPessoa.getEndereco().getNumero()+novaPessoa.getEndereco().getRua()+novaPessoa.getUsuario()+novaPessoa.getSenha());
-				outputDados.close();
+				
+				
 				break;
 			case 2: 
 				Pessoa novaPessoaPoupanca = decodificaPessoa(pacote);
 				try {
-					controller.cadastrarNovaContaPoupanca(novaPessoaPoupanca);	
+					controller.cadastrarNovaConta(novaPessoaPoupanca, "poupanca");	
 				} catch (PessoaExistenteException e) {
 					outputDados.writeInt(20);
 					e.printStackTrace();

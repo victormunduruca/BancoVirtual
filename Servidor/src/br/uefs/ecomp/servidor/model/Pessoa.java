@@ -1,7 +1,11 @@
 package br.uefs.ecomp.servidor.model;
 
-public class Pessoa {
+public class Pessoa implements java.io.Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String nome;
 	private boolean eJuridica;
 	private String numeroRegistro;
@@ -11,7 +15,7 @@ public class Pessoa {
 
 	public Pessoa(String nome, boolean eJuridica, String numeroRegistro, String cep, String rua, String numero, String usuario, String senha) {
 		this.nome = nome;
-		this.seteJuridica(eJuridica);
+		this.eJuridica = eJuridica;
 		this.numeroRegistro = numeroRegistro;
 		this.endereco = new Endereco(cep, rua, numero);
 		this.setUsuario(usuario);
@@ -71,12 +75,12 @@ public class Pessoa {
 	}
 
 
-	public boolean iseJuridica() {
+	public boolean eJuridica() {
 		return eJuridica;
 	}
 
 
-	public void seteJuridica(boolean eJuridica) {
+	public void setJuridica(boolean eJuridica) {
 		this.eJuridica = eJuridica;
 	}
 }

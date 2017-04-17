@@ -1,6 +1,6 @@
 package br.uefs.ecomp.servidor.model;
 
-public class Endereco {
+public class Endereco implements java.io.Serializable{
 
 	private String cep;
 	private String numero;
