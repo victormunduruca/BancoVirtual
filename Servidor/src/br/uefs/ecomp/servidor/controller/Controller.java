@@ -37,7 +37,7 @@ public class Controller {
 			
 			File escritaPessoa;
 	
-			escritaPessoa = new File("dados\\titulares"+"\\"+pessoa.getUsuario()+".txt");
+			escritaPessoa = new File("dados\\titulares"+"\\"+pessoa.getNumeroRegistro()+".txt");
 			FileOutputStream fosPessoa = new FileOutputStream(escritaPessoa);
 			ObjectOutputStream escreverPessoa = new ObjectOutputStream(fosPessoa);
 			escreverPessoa.writeObject(pessoa);
@@ -108,9 +108,11 @@ public class Controller {
 			fis = new FileInputStream(arquivo);
 			ObjectInputStream entrada = new ObjectInputStream(fis);
 			Pessoa pessoa = (Pessoa) entrada.readObject();
+			System.out.println("CPF da pessoa encontrada:" +pessoa.getNumeroRegistro());
 			entrada.close();
 			return pessoa;
 		} catch (FileNotFoundException e) {
+			System.out.println("n achou arquivo");
 			throw new UsuarioInexistenteException();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -118,11 +120,12 @@ public class Controller {
 		}
 	}
 	
-	public static boolean autenticarPessoa(String usuario, String senha) throws UsuarioInexistenteException, IOException {
+	public static boolean autenticarPessoa(String usuario, String senha) throws UsuarioInexistenteException, IOException, FalhaAutenticacaoException {
 		Pessoa titular = getPessoa(usuario);
+		System.out.println("senha do titular: "+titular.getSenha() +" Senha do login: " +senha);
 		if(titular.getSenha().equals(senha))
 			return true;
 		else 
-			return false;
+			throw new FalhaAutenticacaoException();
 	}
 }
