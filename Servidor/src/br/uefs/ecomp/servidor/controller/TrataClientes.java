@@ -46,7 +46,7 @@ public class TrataClientes implements Runnable{
 					try {
 						controller.cadastrarNovaConta(novaPessoa, "corrente");	
 						outputDados.writeInt(Acao.CADASTRO_SUCESSO);
-						System.out.println(novaPessoa.getNome()+novaPessoa.getNumeroRegistro()+novaPessoa.getEndereco().getCep()+novaPessoa.getEndereco().getNumero()+novaPessoa.getEndereco().getRua()+novaPessoa.getUsuario()+novaPessoa.getSenha());
+						System.out.println(novaPessoa.getNome()+novaPessoa.getNumeroRegistro()+novaPessoa.getEndereco().getCep()+novaPessoa.getEndereco().getNumero()+novaPessoa.getEndereco().getRua()+"Senha:"+novaPessoa.getSenha());
 						//						outputDados.close();
 					} catch (PessoaExistenteException e) {
 						outputDados.writeInt(10);
@@ -64,7 +64,7 @@ public class TrataClientes implements Runnable{
 						e.printStackTrace();
 					}
 					outputDados.writeInt(Acao.CADASTRO_SUCESSO);
-					System.out.println(novaPessoaPoupanca.getNome()+novaPessoaPoupanca.getNumeroRegistro()+novaPessoaPoupanca.getEndereco().getCep()+novaPessoaPoupanca.getEndereco().getNumero()+novaPessoaPoupanca.getEndereco().getRua()+novaPessoaPoupanca.getUsuario()+novaPessoaPoupanca.getSenha());
+					System.out.println(novaPessoaPoupanca.getNome()+novaPessoaPoupanca.getNumeroRegistro()+novaPessoaPoupanca.getEndereco().getCep()+novaPessoaPoupanca.getEndereco().getNumero()+novaPessoaPoupanca.getEndereco().getRua()+"Senha: "+novaPessoaPoupanca.getSenha());
 					//					outputDados.close();
 					break;
 				case 3:
@@ -106,7 +106,7 @@ public class TrataClientes implements Runnable{
 		String[] acaoDados = pacote.split("-");
 		String[] partes = acaoDados[1].split(";");
 
-		Pessoa novaPessoa = new Pessoa(partes[0], Boolean.parseBoolean(partes[1]), partes[2], partes[3], partes[4], partes[5], partes[6], partes[7]);
+		Pessoa novaPessoa = new Pessoa(partes[0], Boolean.parseBoolean(partes[1]), partes[2], partes[3], partes[4], partes[5], partes[6]);
 		return novaPessoa;
 	}
 

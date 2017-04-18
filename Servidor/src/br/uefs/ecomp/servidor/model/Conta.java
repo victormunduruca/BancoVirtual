@@ -1,7 +1,11 @@
 package br.uefs.ecomp.servidor.model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 
 public class Conta implements java.io.Serializable  {
 	
@@ -15,11 +19,26 @@ public class Conta implements java.io.Serializable  {
 	private ArrayList<Pessoa> titulares;
 	
 	public Conta(Pessoa pessoa) {
-		idClasse++;
-		this.setNumeroConta(idClasse);
+		try {
+			File file = new File("dados\\ultimo.txt");
+			Scanner leitor;
+			leitor = new Scanner(file);
+			int idLido = leitor.nextInt();
+			System.out.println("idLido" +idLido);
+			leitor.close();
+			idLido++;
+			this.numeroConta = idLido;
+			PrintWriter writer = new PrintWriter(file);
+			writer.print(idLido);
+			writer.close();
+		} catch (FileNotFoundException e) {
+			this.numeroConta = 0;
+		}
+		//idClasse++;
+		//this.setNumeroConta(idClasse);
 		titulares = new ArrayList();
 		titulares.add(pessoa);
-		saldo = 0;
+		setSaldo(0);
 	}
 	public  void adicionarTitular(Pessoa pessoa) {
 		titulares.add(pessoa);
@@ -30,7 +49,12 @@ public class Conta implements java.io.Serializable  {
 	public void setNumeroConta(int numeroConta) {
 		this.numeroConta = numeroConta;
 	}
-	
+	public double getSaldo() {
+		return saldo;
+	}
+	public void setSaldo(double saldo) {
+		this.saldo = saldo;
+	}
 	public ArrayList<Pessoa> getTitulares() {
 		return this.titulares;
 	}
@@ -51,5 +75,6 @@ public class Conta implements java.io.Serializable  {
 		}
 		return null;
 	}
+	
 	
 }

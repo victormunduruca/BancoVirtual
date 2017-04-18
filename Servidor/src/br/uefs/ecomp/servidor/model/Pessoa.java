@@ -9,16 +9,14 @@ public class Pessoa implements java.io.Serializable{
 	private String nome;
 	private boolean eJuridica;
 	private String numeroRegistro;
-	private String usuario;
 	private String senha;
 	private Endereco endereco;
 
-	public Pessoa(String nome, boolean eJuridica, String numeroRegistro, String cep, String rua, String numero, String usuario, String senha) {
+	public Pessoa(String nome, boolean eJuridica, String numeroRegistro, String cep, String rua, String numero, String senha) {
 		this.nome = nome;
 		this.eJuridica = eJuridica;
 		this.numeroRegistro = numeroRegistro;
 		this.endereco = new Endereco(cep, rua, numero);
-		this.setUsuario(usuario);
 		this.setSenha(senha);
 	}
 	
@@ -53,18 +51,6 @@ public class Pessoa implements java.io.Serializable{
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
-
-
-	public String getUsuario() {
-		return usuario;
-	}
-
-
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
-
-
 	public String getSenha() {
 		return senha;
 	}

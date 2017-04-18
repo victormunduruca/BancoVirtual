@@ -9,7 +9,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import br.uefs.ecomp.servidor.exceptions.ContaInexistenteException;
 import br.uefs.ecomp.servidor.exceptions.PessoaExistenteException;
 import br.uefs.ecomp.servidor.exceptions.UsuarioInexistenteException;
 import br.uefs.ecomp.servidor.model.Conta;
@@ -62,7 +61,7 @@ public class Controller {
 //			throw new PessoaExistenteException();
 //		}	
 //	}
-	//autentica (login)
+	
 	//cadastrar titular
 	//deposito deposita(numero conta, 
 	//transferencias 	
@@ -146,5 +145,12 @@ public class Controller {
 			return true;
 		else 
 			throw new FalhaAutenticacaoException();
+	}
+	
+	public static void transacao(String numeroContaOrigem, String numeroContaFim, double valor) throws UsuarioInexistenteException, IOException {
+		Conta contaOrigem = getConta(numeroContaOrigem);
+		Conta contaFim = getConta(numeroContaFim);
+		contaOrigem.setSaldo(contaOrigem.getSaldo()-valor);
+		contaFim.setSaldo(contaFim.getSaldo() + valor);
 	}
 }
