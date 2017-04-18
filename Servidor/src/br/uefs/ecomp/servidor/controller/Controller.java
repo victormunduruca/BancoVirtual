@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import br.uefs.ecomp.servidor.exceptions.ContaInexistenteException;
 import br.uefs.ecomp.servidor.exceptions.PessoaExistenteException;
 import br.uefs.ecomp.servidor.exceptions.UsuarioInexistenteException;
 import br.uefs.ecomp.servidor.model.Conta;
@@ -101,16 +102,33 @@ public class Controller {
 		return listaNomes;
 	}
 	
-	public static Pessoa getPessoa(String usuario) throws UsuarioInexistenteException, IOException{
+//	public static Pessoa getPessoa(String usuario) throws UsuarioInexistenteException, IOException{
+//		try {
+//			File arquivo = new File("dados\\titulares\\"+usuario+".txt");
+//			FileInputStream fis;
+//			fis = new FileInputStream(arquivo);
+//			ObjectInputStream entrada = new ObjectInputStream(fis);
+//			Pessoa pessoa = (Pessoa) entrada.readObject();
+//			System.out.println("CPF da pessoa encontrada:" +pessoa.getNumeroRegistro());
+//			entrada.close();
+//			return pessoa;
+//		} catch (FileNotFoundException e) {
+//			System.out.println("n achou arquivo");
+//			throw new UsuarioInexistenteException();
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//			return null; //mudar
+//		}
+//	}
+	public static Conta getConta(String numeroConta) throws UsuarioInexistenteException, IOException{
 		try {
-			File arquivo = new File("dados\\titulares\\"+usuario+".txt");
+			File arquivo = new File("dados\\contas\\"+numeroConta+".txt");
 			FileInputStream fis;
 			fis = new FileInputStream(arquivo);
 			ObjectInputStream entrada = new ObjectInputStream(fis);
-			Pessoa pessoa = (Pessoa) entrada.readObject();
-			System.out.println("CPF da pessoa encontrada:" +pessoa.getNumeroRegistro());
+			Conta conta = (Conta) entrada.readObject();
 			entrada.close();
-			return pessoa;
+			return conta;
 		} catch (FileNotFoundException e) {
 			System.out.println("n achou arquivo");
 			throw new UsuarioInexistenteException();
@@ -119,11 +137,12 @@ public class Controller {
 			return null; //mudar
 		}
 	}
-	
-	public static boolean autenticarPessoa(String usuario, String senha) throws UsuarioInexistenteException, IOException, FalhaAutenticacaoException {
-		Pessoa titular = getPessoa(usuario);
+	public static boolean autenticarPessoa(String numeroRegistro, String senha, String numeroConta) throws UsuarioInexistenteException, IOException, FalhaAutenticacaoException {
+		Conta conta = getConta(numeroConta);
+		System.out.println("Pegou numero get conta que é: " +conta.getNumeroConta());
+		Pessoa titular = conta.getTitular(numeroRegistro);
 		System.out.println("senha do titular: "+titular.getSenha() +" Senha do login: " +senha);
-		if(titular.getSenha().equals(senha))
+		if(titular != null && titular.getSenha().equals(senha))
 			return true;
 		else 
 			throw new FalhaAutenticacaoException();

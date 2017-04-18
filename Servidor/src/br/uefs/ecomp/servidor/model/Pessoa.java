@@ -24,8 +24,8 @@ public class Pessoa implements java.io.Serializable{
 	
 	@Override
 	public boolean equals(Object arg0) {
-		Pessoa pessoaComparar = (Pessoa) arg0;
-		if(pessoaComparar.getNumeroRegistro().equals(this.numeroRegistro)) 
+		String numeroRegistro = (String) arg0;
+		if(numeroRegistro.equals(this.numeroRegistro)) 
 			return true;
 		return false;
 	}
