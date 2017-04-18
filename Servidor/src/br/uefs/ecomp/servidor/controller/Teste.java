@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Teste {
 	public static void main(String[] args) throws FileNotFoundException {
-		File file = new File("dados\\ultimo.txt");
+		File file = new File("dados\\ultimoTeste.txt");
 		PrintWriter writer = new PrintWriter(file);
 		writer.print(1);
 		writer.close();

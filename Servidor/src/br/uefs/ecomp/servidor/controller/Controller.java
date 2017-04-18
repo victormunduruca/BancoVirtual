@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import br.uefs.ecomp.servidor.exceptions.PessoaExistenteException;
+import br.uefs.ecomp.servidor.exceptions.SaldoInsuficienteException;
 import br.uefs.ecomp.servidor.exceptions.UsuarioInexistenteException;
 import br.uefs.ecomp.servidor.model.Conta;
 import br.uefs.ecomp.servidor.model.Pessoa;
@@ -147,10 +148,39 @@ public class Controller {
 			throw new FalhaAutenticacaoException();
 	}
 	
-	public static void transacao(String numeroContaOrigem, String numeroContaFim, double valor) throws UsuarioInexistenteException, IOException {
+	public static void transacao(String numeroContaOrigem, String numeroContaFim, double valor) throws UsuarioInexistenteException, IOException, SaldoInsuficienteException {
 		Conta contaOrigem = getConta(numeroContaOrigem);
 		Conta contaFim = getConta(numeroContaFim);
+		if(contaOrigem.getSaldo() - valor < 0) {
+			throw new SaldoInsuficienteException();
+		}
 		contaOrigem.setSaldo(contaOrigem.getSaldo()-valor);
 		contaFim.setSaldo(contaFim.getSaldo() + valor);
+		atualizarConta(contaOrigem);
+		atualizarConta(contaFim);
+	}
+	
+	public static void deposito(String numeroConta, double valor) throws UsuarioInexistenteException, IOException {
+		Conta conta = getConta(numeroConta);
+		conta.setSaldo(conta.getSaldo()+valor);
+		atualizarConta(conta);
+	}
+
+	public static synchronized void atualizarConta(Conta conta) {
+		try {
+			File escritaArquivo = new File("dados\\contas"+"\\"+conta.getNumeroConta()+".txt");
+			FileOutputStream fos = new FileOutputStream(escritaArquivo);
+			ObjectOutputStream escrever = new ObjectOutputStream(fos);
+			escrever.writeObject(conta);
+			escrever.flush();
+			escrever.close();
+			fos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
