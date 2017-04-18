@@ -1,21 +1,21 @@
 package br.uefs.ecomp.servidor.controller;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import br.uefs.ecomp.servidor.model.Pessoa;
 
 public class Servidor {
 	public static void main(String[] args) throws IOException {
 		
 		ServerSocket servidor = new ServerSocket(12346);
-		System.out.println("Porta aberta");
-		
-		
+		System.out.println("Porta aberta novo");
 		while(true) {
-			
-			TrataClientes trata = new TrataClientes(servidor);
+			Socket cliente = servidor.accept();	
+
+		
+			TrataClientes trata = new TrataClientes(cliente);
 			new Thread(trata).start();
 		}
 	}
