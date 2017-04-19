@@ -184,7 +184,9 @@ public class Controller {
 		}
 	}
 	
-	public static void cadastrarTitular(Pessoa pessoa, String numeroConta) {
-		
+	public static void cadastrarTitular(Pessoa pessoa, String numeroConta) throws IOException, ContaInexistenteException {
+		Conta conta = getConta(numeroConta);
+		conta.adicionarTitular(pessoa);
+		atualizarConta(conta);
 	}
 }

@@ -12,4 +12,5 @@ public interface Acao {
 	int SALDO_INSUFICIENTE = 41;
 	int ERRO = 42;
 	int DEPOSITO_SUCESSO = 50;
+	int TITULAR_SUCESSO = 6;
 }

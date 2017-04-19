@@ -124,6 +124,18 @@ public class TrataClientes implements Runnable{
 					}
 					outputDados.writeInt(Acao.DEPOSITO_SUCESSO);
 					break;
+				case 6:
+					String[] acaoTitular = pacote.split("-");
+					String[] partesTitular = acaoTitular[1].split(";");
+					Pessoa pessoa = decodificaPessoa(pacote);
+					System.out.println("numero da conta titular: "+partesTitular[7]);
+					try {
+						controller.cadastrarTitular(pessoa, partesTitular[7]);
+					} catch (ContaInexistenteException e) {
+						outputDados.writeInt(Acao.CONTA_INEXISTENTE);
+					}
+					outputDados.writeInt(Acao.TITULAR_SUCESSO);
+					break;
 				default:
 					//					inputDados.close();
 					//					outputDados.close();
