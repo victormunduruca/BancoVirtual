@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import br.uefs.ecomp.servidor.exceptions.ContaInexistenteException;
 import br.uefs.ecomp.servidor.exceptions.PessoaExistenteException;
+import br.uefs.ecomp.servidor.exceptions.SaldoInsuficienteException;
 import br.uefs.ecomp.servidor.exceptions.UsuarioInexistenteException;
 import br.uefs.ecomp.servidor.model.Acao;
 import br.uefs.ecomp.servidor.model.ContaCorrente;
@@ -77,8 +79,36 @@ public class TrataClientes implements Runnable{
 						outputDados.writeInt(Acao.USUARIO_INEXISTENTE);
 					} catch (FalhaAutenticacaoException e) {
 						outputDados.writeInt(Acao.FALHA_LOGIN);
+					} catch (ContaInexistenteException e) {
+						outputDados.writeInt(Acao.CONTA_INEXISTENTE);
 					}
 					outputDados.writeInt(Acao.LOGIN_SUCESSO);
+					break;
+				case 4: 
+					String[] acaoTransacao = pacote.split("-");
+					String[] partesTransacao = acaoTransacao[1].split(";");
+					try {
+						controller.transacao(partesTransacao[0], partesTransacao[1], Double.parseDouble(partesTransacao[2]));
+					} catch (NumberFormatException e) {
+						outputDados.writeInt(Acao.ERRO);
+					} catch (SaldoInsuficienteException e) {
+						outputDados.writeInt(Acao.SALDO_INSUFICIENTE);
+					} catch (ContaInexistenteException e) {
+						outputDados.writeInt(Acao.CONTA_INEXISTENTE);
+					}
+					outputDados.writeInt(Acao.TRANSACAO_SUCESSO);
+					break;
+				case 5:
+					String[] acaoDeposito = pacote.split("-");
+					String[] partesDeposito = acaoDeposito[1].split(";");
+					try {
+						controller.deposito(partesDeposito[0], Double.parseDouble(partesDeposito[1]));
+					} catch (NumberFormatException e) {
+						outputDados.writeInt(Acao.ERRO);
+					} catch (ContaInexistenteException e) {
+						outputDados.writeInt(Acao.CONTA_INEXISTENTE);
+					}
+					outputDados.writeInt(Acao.DEPOSITO_SUCESSO);
 					break;
 				default:
 					//					inputDados.close();

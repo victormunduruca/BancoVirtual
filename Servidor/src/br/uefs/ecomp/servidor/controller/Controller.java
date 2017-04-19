@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import br.uefs.ecomp.servidor.exceptions.ContaInexistenteException;
 import br.uefs.ecomp.servidor.exceptions.PessoaExistenteException;
 import br.uefs.ecomp.servidor.exceptions.SaldoInsuficienteException;
 import br.uefs.ecomp.servidor.exceptions.UsuarioInexistenteException;
@@ -120,7 +121,7 @@ public class Controller {
 //			return null; //mudar
 //		}
 //	}
-	public static Conta getConta(String numeroConta) throws UsuarioInexistenteException, IOException{
+	public static Conta getConta(String numeroConta) throws IOException, ContaInexistenteException{
 		try {
 			File arquivo = new File("dados\\contas\\"+numeroConta+".txt");
 			FileInputStream fis;
@@ -131,24 +132,26 @@ public class Controller {
 			return conta;
 		} catch (FileNotFoundException e) {
 			System.out.println("n achou arquivo");
-			throw new UsuarioInexistenteException();
+			throw new ContaInexistenteException();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			return null; //mudar
 		}
 	}
-	public static boolean autenticarPessoa(String numeroRegistro, String senha, String numeroConta) throws UsuarioInexistenteException, IOException, FalhaAutenticacaoException {
+	public static boolean autenticarPessoa(String numeroRegistro, String senha, String numeroConta) throws UsuarioInexistenteException, IOException, FalhaAutenticacaoException, ContaInexistenteException {
 		Conta conta = getConta(numeroConta);
 		System.out.println("Pegou numero get conta que é: " +conta.getNumeroConta());
 		Pessoa titular = conta.getTitular(numeroRegistro);
-		System.out.println("senha do titular: "+titular.getSenha() +" Senha do login: " +senha);
+		if(titular == null)
+			throw new UsuarioInexistenteException();
+		//System.out.println("senha do titular: "+titular.getSenha() +" Senha do login: " +senha);
 		if(titular != null && titular.getSenha().equals(senha))
 			return true;
 		else 
 			throw new FalhaAutenticacaoException();
 	}
 	
-	public static void transacao(String numeroContaOrigem, String numeroContaFim, double valor) throws UsuarioInexistenteException, IOException, SaldoInsuficienteException {
+	public static void transacao(String numeroContaOrigem, String numeroContaFim, double valor) throws IOException, SaldoInsuficienteException, ContaInexistenteException {
 		Conta contaOrigem = getConta(numeroContaOrigem);
 		Conta contaFim = getConta(numeroContaFim);
 		if(contaOrigem.getSaldo() - valor < 0) {
@@ -160,13 +163,13 @@ public class Controller {
 		atualizarConta(contaFim);
 	}
 	
-	public static void deposito(String numeroConta, double valor) throws UsuarioInexistenteException, IOException {
+	public static void deposito(String numeroConta, double valor) throws ContaInexistenteException, IOException {
 		Conta conta = getConta(numeroConta);
 		conta.setSaldo(conta.getSaldo()+valor);
 		atualizarConta(conta);
 	}
 
-	public static synchronized void atualizarConta(Conta conta) {
+	public static void atualizarConta(Conta conta) {
 		try {
 			File escritaArquivo = new File("dados\\contas"+"\\"+conta.getNumeroConta()+".txt");
 			FileOutputStream fos = new FileOutputStream(escritaArquivo);
