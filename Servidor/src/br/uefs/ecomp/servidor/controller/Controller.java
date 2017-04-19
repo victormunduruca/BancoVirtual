@@ -64,9 +64,6 @@ public class Controller {
 //		}	
 //	}
 	
-	//cadastrar titular
-	//deposito deposita(numero conta, 
-	//transferencias 	
 	
 	public static Controller getInstance() {
 
@@ -185,5 +182,9 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static void cadastrarTitular(Pessoa pessoa, String numeroConta) {
+		
 	}
 }

@@ -11,6 +11,7 @@ import br.uefs.ecomp.servidor.exceptions.PessoaExistenteException;
 import br.uefs.ecomp.servidor.exceptions.SaldoInsuficienteException;
 import br.uefs.ecomp.servidor.exceptions.UsuarioInexistenteException;
 import br.uefs.ecomp.servidor.model.Acao;
+import br.uefs.ecomp.servidor.model.Conta;
 import br.uefs.ecomp.servidor.model.ContaCorrente;
 import br.uefs.ecomp.servidor.model.Pessoa;
 
@@ -88,7 +89,15 @@ public class TrataClientes implements Runnable{
 					String[] acaoTransacao = pacote.split("-");
 					String[] partesTransacao = acaoTransacao[1].split(";");
 					try {
+						Conta conta = controller.getConta(partesTransacao[0]);
+						System.out.println("Saldo origem antes: "+conta.getSaldo());
+						Conta contaFim = controller.getConta(partesTransacao[1]);
+						System.out.println("Saldo fim antes: "+contaFim.getSaldo());
 						controller.transacao(partesTransacao[0], partesTransacao[1], Double.parseDouble(partesTransacao[2]));
+						conta = controller.getConta(partesTransacao[0]);
+						System.out.println("Saldo origem depois: "+conta.getSaldo());
+						contaFim = controller.getConta(partesTransacao[1]);
+						System.out.println("Saldo fim antes: "+contaFim.getSaldo());
 					} catch (NumberFormatException e) {
 						outputDados.writeInt(Acao.ERRO);
 					} catch (SaldoInsuficienteException e) {
@@ -102,7 +111,12 @@ public class TrataClientes implements Runnable{
 					String[] acaoDeposito = pacote.split("-");
 					String[] partesDeposito = acaoDeposito[1].split(";");
 					try {
+						Conta conta = controller.getConta(partesDeposito[0]);
+						System.out.println("Saldo antes: "+conta.getSaldo());
 						controller.deposito(partesDeposito[0], Double.parseDouble(partesDeposito[1]));
+						conta = controller.getConta(partesDeposito[0]);
+						System.out.println("Saldo depois: "+conta.getSaldo());
+						
 					} catch (NumberFormatException e) {
 						outputDados.writeInt(Acao.ERRO);
 					} catch (ContaInexistenteException e) {
