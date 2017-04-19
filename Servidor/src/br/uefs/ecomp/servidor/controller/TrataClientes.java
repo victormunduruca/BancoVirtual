@@ -2,6 +2,7 @@ package br.uefs.ecomp.servidor.controller;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -36,7 +37,7 @@ public class TrataClientes implements Runnable{
 				DataInputStream inputDados = new DataInputStream(cliente.getInputStream());
 				DataOutputStream outputDados = new DataOutputStream(cliente.getOutputStream());
 
-				System.out.println("Nova conexão com o cliente " +cliente.getInetAddress());
+				System.out.println("Conexao com cliente: " + cliente.getRemoteSocketAddress().toString());
 				String pacote = (String) inputDados.readUTF();
 				System.out.println("pacote: " +pacote);
 				int acao =  retornaAcao(pacote);
@@ -55,8 +56,6 @@ public class TrataClientes implements Runnable{
 						outputDados.writeInt(10);
 						System.out.println("Cliente n cadastrado");
 					}
-
-
 					break;
 				case 2: 
 					Pessoa novaPessoaPoupanca = decodificaPessoa(pacote);
@@ -145,10 +144,14 @@ public class TrataClientes implements Runnable{
 				outputDados.close();
 				cliente.close();
 				
-			} catch (IOException e) {
+			} 
+			catch (EOFException e) {
+				   System.out.println("Cliente Desconectado!");
+			} 
+			catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} 
 		
 			
 	}
