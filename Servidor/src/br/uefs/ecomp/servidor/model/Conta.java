@@ -28,7 +28,6 @@ public class Conta implements java.io.Serializable  {
 			Scanner leitor;
 			leitor = new Scanner(file);
 			int idLido = leitor.nextInt();
-			System.out.println("idLido" +idLido);
 			leitor.close();
 			idLido++;
 			this.numeroConta = idLido;

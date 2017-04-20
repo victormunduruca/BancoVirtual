@@ -15,7 +15,6 @@ import br.uefs.ecomp.servidor.exceptions.TitularExistenteException;
 import br.uefs.ecomp.servidor.exceptions.UsuarioInexistenteException;
 import br.uefs.ecomp.servidor.model.Acao;
 import br.uefs.ecomp.servidor.model.Conta;
-import br.uefs.ecomp.servidor.model.ContaCorrente;
 import br.uefs.ecomp.servidor.model.Pessoa;
 
 
@@ -53,8 +52,6 @@ public class TrataClientes implements Runnable{
 					Pessoa novaPessoa = decodificaPessoa(pacote);
 					int numeroConta = 0;
 					try {
-//						String[] acaoCadastro = pacote.split("-"); //Divide a ação do resto do pacote
-//						String[] partesCadastro = acaoCadastro[1].split(";"); //Divide os atributos do pacote dividos por ponto e vírgula
 						numeroConta = controller.cadastrarNovaConta(novaPessoa, 1);	//Método de cadastro 
 					} catch (PessoaExistenteException e) {
 						outputDados.writeInt(Acao.PESSOA_EXISTENTE); // Envia erro ao cliente, caso ocorra
