@@ -38,10 +38,12 @@ public class Controller {
 	 * @throws PessoaExistenteException
 	 * @throws IOException
 	 */
-	public static void cadastrarNovaConta(Pessoa pessoa, int tipo) throws PessoaExistenteException, IOException{
+	public int cadastrarNovaConta(Pessoa pessoa, int tipo) throws PessoaExistenteException, IOException{
+		int numeroConta = 0;
 		if(!existePessoa(pessoa)) { //verifica se pessoa não existe
 			if(tipo == 1) { // Se o tipo for um, cadastra conta corrente
 				ContaCorrente novaConta = new ContaCorrente(pessoa); // Instancia nova conta corrente
+				numeroConta = novaConta.getNumeroConta();
 				File escritaArquivo = new File("dados\\contas"+"\\"+novaConta.getNumeroConta()+".txt");//Inicia rotina de escrever o objeto no arquivo
 				FileOutputStream fos = new FileOutputStream(escritaArquivo);
 				ObjectOutputStream escrever = new ObjectOutputStream(fos);
@@ -50,6 +52,7 @@ public class Controller {
 				fos.close();
 			} else if(tipo == 2) { // Se for tipo 2, cadastra conta poupança
 				ContaPoupanca novaConta = new ContaPoupanca(pessoa); //O processo é o mesmo anterior, só diferenciando o tipo de objeto
+				numeroConta = novaConta.getNumeroConta();
 				File escritaArquivo = new File("dados\\contas"+"\\"+novaConta.getNumeroConta()+".txt");
 				FileOutputStream fos = new FileOutputStream(escritaArquivo);
 				ObjectOutputStream escrever = new ObjectOutputStream(fos);
@@ -57,6 +60,7 @@ public class Controller {
 				escrever.close();
 				fos.close();
 			}
+			
 			File escritaPessoa = new File("dados\\titulares"+"\\"+pessoa.getNumeroRegistro()+".txt"); //Inicia rotina para a escrita do objeto pessoa na pasta especializada
 			FileOutputStream fosPessoa = new FileOutputStream(escritaPessoa);
 			ObjectOutputStream escreverPessoa = new ObjectOutputStream(fosPessoa);
@@ -66,7 +70,7 @@ public class Controller {
 		} else {
 			throw new PessoaExistenteException();
 		}
-		
+		return numeroConta;
 	}
 	/*
 	 * Implementação do padrão Singleton
@@ -83,7 +87,7 @@ public class Controller {
 	 * @param Pessoa que deseja se verificar
 	 * @return Boolean representando a existência da pessoa nos arquivos
 	 */
-	public static boolean existePessoa(Pessoa pessoa) {
+	public boolean existePessoa(Pessoa pessoa) {
 		ArrayList<String> listaNomes = getListaArquivos("dados\\titulares"); // Método retorna a lista de arquivos encontrados na pasta
 		if(listaNomes.contains(pessoa.getNumeroRegistro())) // Verifica se o nome da pessoa existe nos registros
 			return true;
@@ -95,7 +99,7 @@ public class Controller {
 	 * @param Caminho do arquivo
 	 * @return Lista de nomes dos arquivos
 	 */
-	public static ArrayList<String> getListaArquivos(String caminho) {
+	public ArrayList<String> getListaArquivos(String caminho) {
 		ArrayList<String> listaNomes = new ArrayList<String>();
 		File diretorio = new File(caminho);
 		File[] listaArquivos = diretorio.listFiles();
@@ -134,7 +138,7 @@ public class Controller {
 	 * @throws IOException
 	 * @throws ContaInexistenteException 
 	 */
-	public static Conta getConta(String numeroConta) throws IOException, ContaInexistenteException{
+	public Conta getConta(String numeroConta) throws IOException, ContaInexistenteException{
 		try {
 			File arquivo = new File("dados\\contas\\"+numeroConta+".txt"); //Tenta ler o arquivo diretamente
 			FileInputStream fis;
@@ -162,7 +166,7 @@ public class Controller {
 	 * @throws FalhaAutenticacaoException
 	 * @throws ContaInexistenteException
 	 */
-	public static boolean autenticarPessoa(String numeroRegistro, String senha, String numeroConta) throws UsuarioInexistenteException, IOException, FalhaAutenticacaoException, ContaInexistenteException {
+	public boolean autenticarPessoa(String numeroRegistro, String senha, String numeroConta) throws UsuarioInexistenteException, IOException, FalhaAutenticacaoException, ContaInexistenteException {
 		Conta conta = getConta(numeroConta); //Recebe objeto conta, buscado no arquivo. É por ele que a autenticação circulará
 		Pessoa titular = conta.getTitular(numeroRegistro); //Com base na conta, acha o titular, se existe
 		if(titular == null) // Se não encontrar o usuário, lança exceção
@@ -181,7 +185,7 @@ public class Controller {
 	 * @throws SaldoInsuficienteException
 	 * @throws ContaInexistenteException
 	 */
-	public static void transacao(String numeroContaOrigem, String numeroContaFim, double valor) throws IOException, SaldoInsuficienteException, ContaInexistenteException {
+	public void transacao(String numeroContaOrigem, String numeroContaFim, double valor) throws IOException, SaldoInsuficienteException, ContaInexistenteException {
 		Conta contaOrigem = getConta(numeroContaOrigem); //Recebe objeto conta, buscado no arquivo
 		Conta contaFim = getConta(numeroContaFim);//Recebe objeto conta, buscado no arquivo
 		if(contaOrigem.getSaldo() - valor < 0) { //Caso o saldo seja insuficiente, é lançado uma exceção
@@ -199,7 +203,7 @@ public class Controller {
 	 * @throws ContaInexistenteException
 	 * @throws IOException
 	 */
-	public static void deposito(String numeroConta, double valor) throws ContaInexistenteException, IOException {
+	public  void deposito(String numeroConta, double valor) throws ContaInexistenteException, IOException {
 		Conta conta = getConta(numeroConta); // Recebe objeto conta, buscado no arquivo
 		conta.setSaldo(conta.getSaldo()+valor); //Adiciona o valor do depósito à conta
 		atualizarConta(conta); // Atualiza conta
@@ -208,7 +212,7 @@ public class Controller {
 	 * Método que realiza a atualização das contas, no arquivo
 	 * @param Conta a ser atualizada
 	 */
-	public static void atualizarConta(Conta conta) {
+	public void atualizarConta(Conta conta) {
 		try {
 			File escritaArquivo = new File("dados\\contas"+"\\"+conta.getNumeroConta()+".txt"); // Rotina stream de arquivos
 			FileOutputStream fos = new FileOutputStream(escritaArquivo);
@@ -234,7 +238,7 @@ public class Controller {
 	 * @throws TitularExistenteException 
 	 * @throws PessoaExistenteException 
 	 */
-	public static void cadastrarTitular(Pessoa pessoa, String numeroConta) throws IOException, ContaInexistenteException, TitularExistenteException{
+	public void cadastrarTitular(Pessoa pessoa, String numeroConta) throws IOException, ContaInexistenteException, TitularExistenteException{
 			Conta conta = getConta(numeroConta);
 			conta.adicionarTitular(pessoa);
 			atualizarConta(conta);

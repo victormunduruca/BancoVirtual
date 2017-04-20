@@ -51,15 +51,17 @@ public class TrataClientes implements Runnable{
 				switch (acao) {
 				case 1: //Cadastro Conta corrente
 					Pessoa novaPessoa = decodificaPessoa(pacote);
+					int numeroConta = 0;
 					try {
 						String[] acaoCadastro = pacote.split("-"); //Divide a ação do resto do pacote
 						String[] partesCadastro = acaoCadastro[1].split(";"); //Divide os atributos do pacote dividos por ponto e vírgula
-						controller.cadastrarNovaConta(novaPessoa, 1);	//Método de cadastro 
+						numeroConta = controller.cadastrarNovaConta(novaPessoa, 1);	//Método de cadastro 
 					} catch (PessoaExistenteException e) {
 						outputDados.writeInt(Acao.PESSOA_EXISTENTE); // Envia erro ao cliente, caso ocorra
 						System.out.println("Cliente não cadastrado");
 					}
 					outputDados.writeInt(Acao.CADASTRO_SUCESSO); // Informa ao cliente, caso o cadastro seja realizado com sucesso
+					outputDados.writeInt(numeroConta);
 					break;
 				case 2: //Cadastro Conta Poupanca
 					Pessoa novaPessoaPoupanca = decodificaPessoa(pacote);
