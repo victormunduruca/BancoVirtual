@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import br.uefs.ecomp.servidor.exceptions.ContaInexistenteException;
+import br.uefs.ecomp.servidor.exceptions.FalhaAutenticacaoException;
 import br.uefs.ecomp.servidor.exceptions.PessoaExistenteException;
 import br.uefs.ecomp.servidor.exceptions.SaldoInsuficienteException;
 import br.uefs.ecomp.servidor.exceptions.TitularExistenteException;

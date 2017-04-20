@@ -9,20 +9,22 @@ import java.util.Scanner;
 
 import br.uefs.ecomp.servidor.exceptions.TitularExistenteException;
 
+/**
+ * CLasse que representa uma Conta 
+ * @author Victor Munduruca
+ *
+ */
 public class Conta implements java.io.Serializable  {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	private static int idClasse = 0;
 	private int numeroConta;
 	private double saldo;
 	private ArrayList<Pessoa> titulares;
 	
 	public Conta(Pessoa pessoa) {
 		try {
-			File file = new File("dados\\ultimo.txt");
+			File file = new File("dados\\ultimo.txt"); //O número da conta é gerado automaticamente com base em um arquivo, que guarda o número
+			//da última conta cadastrada, para evitar sobrescrição de contas quando o sistema cair, por exemplo
 			Scanner leitor;
 			leitor = new Scanner(file);
 			int idLido = leitor.nextInt();
@@ -36,18 +38,21 @@ public class Conta implements java.io.Serializable  {
 		} catch (FileNotFoundException e) {
 			this.numeroConta = 0;
 		}
-		//idClasse++;
-		//this.setNumeroConta(idClasse);
-		titulares = new ArrayList();
-		titulares.add(pessoa);
+		titulares = new ArrayList<Pessoa>();
+		titulares.add(pessoa); //Adiciona a pessoa a conta
 		setSaldo(0);
 	}
+	/**
+	 * Método que adiciona titular
+	 * @param Titular 
+	 * @throws TitularExistenteException
+	 */
 	public  void adicionarTitular(Pessoa pessoa) throws TitularExistenteException {
-		if(!titulares.contains(pessoa)) {
-			titulares.add(pessoa);
+		if(!titulares.contains(pessoa)) { //Verifica se titular já existe na lista de titulares
+			titulares.add(pessoa); // Caso não exista, ele é cadastrado
 		}
 		else 
-			throw new TitularExistenteException();
+			throw new TitularExistenteException(); //Caso exista, essa exceção é lançadaa
 	}
 	public int getNumeroConta() {
 		return numeroConta;
@@ -64,6 +69,9 @@ public class Conta implements java.io.Serializable  {
 	public ArrayList<Pessoa> getTitulares() {
 		return this.titulares;
 	}
+	/**
+	 * Método que itera e lista titulares
+	 */
 	public void listarTitulares() {
 		Iterator<Pessoa> it = (Iterator) titulares.iterator();
 		while(it.hasNext()) {
@@ -72,6 +80,11 @@ public class Conta implements java.io.Serializable  {
 			System.out.println("Numero Registro pessoa na lista de conta:" +pessoa.getNumeroRegistro());
 		}
 	}
+	/**
+	 * Método que retorna titular
+	 * @param CPF/CNPJ do titular
+	 * @return Titular
+	 */
 	public Pessoa getTitular(String numeroRegistro) {
 		Iterator<Pessoa> it = (Iterator) titulares.iterator();
 		while(it.hasNext()) {

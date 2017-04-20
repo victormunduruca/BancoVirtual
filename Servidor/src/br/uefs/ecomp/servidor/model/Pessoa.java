@@ -1,10 +1,11 @@
 package br.uefs.ecomp.servidor.model;
-
+/**
+ * Classe que representa uma pessoa
+ * @author Victor Munduruca
+ *
+ */
 public class Pessoa implements java.io.Serializable{
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private String nome;
 	private boolean eJuridica;
