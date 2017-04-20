@@ -16,7 +16,9 @@ public class Teste {
 //		System.out.println("O inteiro é: " +leitor.nextInt());
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Agora, digite o valor a ser depositado (utilize virgulas)");
-		double valorDeposito = scanner.nextDouble();
-		System.out.println("Double: " +valorDeposito);
+		String st = (String) scanner.next();
+		if(st.contains(","))
+			System.out.println("Digite com ");
+		System.out.println("Double: " +Double.valueOf(st));
 	}
 }

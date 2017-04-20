@@ -112,25 +112,6 @@ public class Controller {
 		}
 		return listaNomes;
 	}
-	
-//	public static Pessoa getPessoa(String usuario) throws UsuarioInexistenteException, IOException{
-//		try {
-//			File arquivo = new File("dados\\titulares\\"+usuario+".txt");
-//			FileInputStream fis;
-//			fis = new FileInputStream(arquivo);
-//			ObjectInputStream entrada = new ObjectInputStream(fis);
-//			Pessoa pessoa = (Pessoa) entrada.readObject();
-//			System.out.println("CPF da pessoa encontrada:" +pessoa.getNumeroRegistro());
-//			entrada.close();
-//			return pessoa;
-//		} catch (FileNotFoundException e) {
-//			System.out.println("n achou arquivo");
-//			throw new UsuarioInexistenteException();
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//			return null; //mudar
-//		}
-//	}
 	/**
 	 * Método que retorna Conta
 	 * @param Número da conta 

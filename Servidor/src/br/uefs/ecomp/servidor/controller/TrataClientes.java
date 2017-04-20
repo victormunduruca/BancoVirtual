@@ -53,8 +53,8 @@ public class TrataClientes implements Runnable{
 					Pessoa novaPessoa = decodificaPessoa(pacote);
 					int numeroConta = 0;
 					try {
-						String[] acaoCadastro = pacote.split("-"); //Divide a ação do resto do pacote
-						String[] partesCadastro = acaoCadastro[1].split(";"); //Divide os atributos do pacote dividos por ponto e vírgula
+//						String[] acaoCadastro = pacote.split("-"); //Divide a ação do resto do pacote
+//						String[] partesCadastro = acaoCadastro[1].split(";"); //Divide os atributos do pacote dividos por ponto e vírgula
 						numeroConta = controller.cadastrarNovaConta(novaPessoa, 1);	//Método de cadastro 
 					} catch (PessoaExistenteException e) {
 						outputDados.writeInt(Acao.PESSOA_EXISTENTE); // Envia erro ao cliente, caso ocorra
@@ -64,14 +64,16 @@ public class TrataClientes implements Runnable{
 					outputDados.writeInt(numeroConta);
 					break;
 				case 2: //Cadastro Conta Poupanca
+					int numeroContaPoupanca = 0;
 					Pessoa novaPessoaPoupanca = decodificaPessoa(pacote);
 					try {
-						controller.cadastrarNovaConta(novaPessoaPoupanca, 2);	
+						numeroContaPoupanca = controller.cadastrarNovaConta(novaPessoaPoupanca, 2);	
 					} catch (PessoaExistenteException e) {
 						outputDados.writeInt(Acao.PESSOA_EXISTENTE);
 						e.printStackTrace();
 					}
 					outputDados.writeInt(Acao.CADASTRO_SUCESSO);
+					outputDados.writeInt(numeroContaPoupanca);
 					break;
 				case 3:
 					String[] acaoLogin = pacote.split("-"); //Divide a ação do resto do pacote
@@ -92,12 +94,14 @@ public class TrataClientes implements Runnable{
 					String[] partesTransacao = acaoTransacao[1].split(";");//Divide os atributos do pacote dividos por ponto e vírgula
 					try {
 						Conta conta = controller.getConta(partesTransacao[0]); //Recebe objetos das contas de origem e destino
+						System.out.println("Saldo origem (antes): "+conta.getSaldo());
 						Conta contaFim = controller.getConta(partesTransacao[1]);
+						System.out.println("Saldo destino (antes): "+contaFim.getSaldo());
 						controller.transacao(partesTransacao[0], partesTransacao[1], Double.parseDouble(partesTransacao[2]));
 						conta = controller.getConta(partesTransacao[0]);
-						System.out.println("Saldo origem depois: "+conta.getSaldo());
+						System.out.println("Saldo origem (depois): "+conta.getSaldo());
 						contaFim = controller.getConta(partesTransacao[1]);
-						System.out.println("Saldo fim antes: "+contaFim.getSaldo());
+						System.out.println("Saldo destino (depois): "+contaFim.getSaldo());
 					} catch (NumberFormatException e) { //Retorna ao usuário o resultado da operação por meio de um int
 						outputDados.writeInt(Acao.ERRO);
 					} catch (SaldoInsuficienteException e) {
