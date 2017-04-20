@@ -193,7 +193,7 @@ public class Controller {
 	 * Método que realiza a atualização das contas, no arquivo
 	 * @param Conta a ser atualizada
 	 */
-	public void atualizarConta(Conta conta) {
+	public synchronized void atualizarConta(Conta conta) {
 		try {
 			File escritaArquivo = new File("dados\\contas"+"\\"+conta.getNumeroConta()+".txt"); // Rotina stream de arquivos
 			FileOutputStream fos = new FileOutputStream(escritaArquivo);
