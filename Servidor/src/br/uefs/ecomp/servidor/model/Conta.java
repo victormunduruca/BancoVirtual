@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import br.uefs.ecomp.servidor.exceptions.TitularExistenteException;
+
 public class Conta implements java.io.Serializable  {
 	
 	/**
@@ -40,8 +42,12 @@ public class Conta implements java.io.Serializable  {
 		titulares.add(pessoa);
 		setSaldo(0);
 	}
-	public  void adicionarTitular(Pessoa pessoa) {
-		titulares.add(pessoa);
+	public  void adicionarTitular(Pessoa pessoa) throws TitularExistenteException {
+		if(!titulares.contains(pessoa)) {
+			titulares.add(pessoa);
+		}
+		else 
+			throw new TitularExistenteException();
 	}
 	public int getNumeroConta() {
 		return numeroConta;

@@ -10,6 +10,7 @@ import java.net.Socket;
 import br.uefs.ecomp.servidor.exceptions.ContaInexistenteException;
 import br.uefs.ecomp.servidor.exceptions.PessoaExistenteException;
 import br.uefs.ecomp.servidor.exceptions.SaldoInsuficienteException;
+import br.uefs.ecomp.servidor.exceptions.TitularExistenteException;
 import br.uefs.ecomp.servidor.exceptions.UsuarioInexistenteException;
 import br.uefs.ecomp.servidor.model.Acao;
 import br.uefs.ecomp.servidor.model.Conta;
@@ -48,21 +49,23 @@ public class TrataClientes implements Runnable{
 					int numeroConta = 0;
 					Pessoa novaPessoa = decodificaPessoa(pacote);
 					try {
-						controller.cadastrarNovaConta(novaPessoa, "corrente");	
+						String[] acaoCadastro = pacote.split("-");
+						String[] partesCadastro = acaoCadastro[1].split(";");
+						controller.cadastrarNovaConta(novaPessoa, 1);	
 						outputDados.writeInt(Acao.CADASTRO_SUCESSO);
 						System.out.println(novaPessoa.getNome()+novaPessoa.getNumeroRegistro()+novaPessoa.getEndereco().getCep()+novaPessoa.getEndereco().getNumero()+novaPessoa.getEndereco().getRua()+"Senha:"+novaPessoa.getSenha());
 						//						outputDados.close();
 					} catch (PessoaExistenteException e) {
-						outputDados.writeInt(10);
+						outputDados.writeInt(Acao.PESSOA_EXISTENTE);
 						System.out.println("Cliente n cadastrado");
 					}
 					break;
 				case 2: 
 					Pessoa novaPessoaPoupanca = decodificaPessoa(pacote);
 					try {
-						controller.cadastrarNovaConta(novaPessoaPoupanca, "poupanca");	
+						controller.cadastrarNovaConta(novaPessoaPoupanca, 2);	
 					} catch (PessoaExistenteException e) {
-						outputDados.writeInt(20);
+						outputDados.writeInt(Acao.PESSOA_EXISTENTE);
 						e.printStackTrace();
 					}
 					outputDados.writeInt(Acao.CADASTRO_SUCESSO);
@@ -132,7 +135,9 @@ public class TrataClientes implements Runnable{
 						controller.cadastrarTitular(pessoa, partesTitular[7]);
 					} catch (ContaInexistenteException e) {
 						outputDados.writeInt(Acao.CONTA_INEXISTENTE);
-					}
+					} catch (TitularExistenteException e) {
+						outputDados.writeInt(Acao.TITULAR_EXISTENTE);
+					} 
 					outputDados.writeInt(Acao.TITULAR_SUCESSO);
 					break;
 				default:
