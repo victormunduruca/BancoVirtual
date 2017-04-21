@@ -106,7 +106,6 @@ public class Controller {
 		for (int i = 0; i < listaArquivos.length; i++) {
 			if(listaArquivos[i].isFile())
 			{
-				System.out.println(listaArquivos[i].getName().replace(".txt", ""));
 				listaNomes.add(listaArquivos[i].getName().replace(".txt", ""));
 			}
 		}
@@ -129,7 +128,6 @@ public class Controller {
 			entrada.close();
 			return conta;
 		} catch (FileNotFoundException e) {
-			System.out.println("n achou arquivo");
 			throw new ContaInexistenteException(); // Lança exceção caso não ache a conta
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
